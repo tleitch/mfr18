@@ -54,7 +54,7 @@ spRets=dailyReturn(GSPC,type='log',leading=TRUE)  # type=log gives lognormal ret
 baseSpec=ugarchspec()
 # Now call ugarch with spec and data to get GARCH fit
 spGFit=ugarchfit(spec=baseSpec,data=spRets)
-spGFit
+
 
 # plot(spGFit) # optional, run interactively
 
@@ -64,10 +64,20 @@ plot(spxRV2["2004"],main="RV vs GARCH Variance Forecast")
 points(as.xts(sigma(spGFit))[as.Date(spxdates)]^2)
 rv2garchFit=lm(spxRV2["2004"]~as.xts(sigma(spGFit))[as.Date(spxdates)]^2)
 summary(rv2garchFit)
-plot(rv2garchFit)
+plot(rv2garchFit,which=1)
+# plot forecast
+plot(ugarchforecast(spGFit))
 
-
-
+lvgSpec=ugarchspec(list(model="gjrGARCH"))
+# Now call ugarch with levergage spec and data to get GARCH fit
+spLvgFit=ugarchfit(spec=lvgSpec,data=spRets)
+plot(spxRV2["2004"],main="RV vs GARCH w/Leverage Variance Forecast")
+points(as.xts(sigma(spLvgGFit))[as.Date(spxdates)]^2)
+rv2garchLvgFit=lm(spxRV2["2004"]~as.xts(sigma(spLvgGFit))[as.Date(spxdates)]^2)
+summary(rv2garchLvgFit)
+plot(rv2garchLvgFit,which=1)
+# plot garch lvg forecast
+plot(ugarchforecast(spLvgFit))
 
 
 # Multi plot
