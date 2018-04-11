@@ -36,10 +36,10 @@ plot(vParkinson)  # optional, run interactively
 
 # fit a linear model of Parkinson predictions to realized variance for 2004
 # 1st, get dates from RV data because it has missing dates
-spxdates=index(spxRV2["2004"])
+spxdates=index(spxRV2["2008/2009"])
 
 # Now fit (remember parky is vol forecast and spxRV2 is variance)
-rv2parkyFit=lm(spxRV2["2004"]~vParkinson[spxdates]^2 + 0)
+rv2parkyFit=lm(spxRV2["2008/2009"]~vParkinson[spxdates]^2 + 0)
 summary(rv2parkyFit)
 
 
@@ -72,8 +72,8 @@ lvgSpec=ugarchspec(list(model="gjrGARCH"))
 # Now call ugarch with levergage spec and data to get GARCH fit
 spLvgFit=ugarchfit(spec=lvgSpec,data=spRets)
 plot(spxRV2["2004"],main="RV vs GARCH w/Leverage Variance Forecast")
-points(as.xts(sigma(spLvgGFit))[as.Date(spxdates)]^2)
-rv2garchLvgFit=lm(spxRV2["2004"]~as.xts(sigma(spLvgGFit))[as.Date(spxdates)]^2)
+points(as.xts(sigma(spLvgFit))[as.Date(spxdates)]^2)
+rv2garchLvgFit=lm(spxRV2["2004"]~as.xts(sigma(spLvgFit))[as.Date(spxdates)]^2)
 summary(rv2garchLvgFit)
 plot(rv2garchLvgFit,which=1)
 # plot garch lvg forecast
