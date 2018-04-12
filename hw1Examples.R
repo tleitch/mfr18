@@ -12,9 +12,9 @@ plot(spxHarFit)
 
 # Linear fit check for HAR model
 # Grab dates to avoid missing dates in RV data, use in independent variable selection
-spxdates=index(spxRV2["2004"])
+spxdates=index(spxRV2["2004/2005"])
 # Get fit, adjust index for fitted values to make into xts data type
-rv2harFit=lm(spxRV2["2004"]~as.xts(spxHarFit$fitted.values)[as.Date(spxdates)] )
+rv2harFit=lm(spxRV2["2004/2005"]~as.xts(spxHarFit$fitted.values)[as.Date(spxdates)] )
 summary(rv2harFit)
 
 
@@ -42,7 +42,7 @@ spxdates=index(spxRV2["2008/2009"])
 rv2parkyFit=lm(spxRV2["2008/2009"]~vParkinson[spxdates]^2 + 0)
 summary(rv2parkyFit)
 
-
+plot(as.xts(rv2parkyFit$fitted.values))
 
 
 # Garch Fit Example
@@ -56,7 +56,7 @@ baseSpec=ugarchspec()
 spGFit=ugarchfit(spec=baseSpec,data=spRets)
 
 
-# plot(spGFit) # optional, run interactively
+ plot(spGFit) # optional, run interactively
 
 # Build linear model of RV vs GARCH forecast
 spxdates=index(spxRV2["2004"])
@@ -128,7 +128,7 @@ garchPNL=cumPNL(spRets["2004"],sigma(spGFit)["2004"])
 harPNL=cumPNL(spRets[as.Date(spxdates)],sqrt(as.xts(spxHarFit$fitted.values)[as.Date(spxdates)]))
 
 ## plot Cummulative P&L for position strategy
-plot(parkyPNL$cumPNL,ylim=c(-500000,1000000),main="Cummulative P&L for Limit Strategies")
+plot(parkyPNL$cumPNL,ylim=c(-2000000,1000000),main="Cummulative P&L for Limit Strategies")
 lines(garchPNL$cumPNL,col="red")
 lines(harPNL$cumPNL,col="green")
 
